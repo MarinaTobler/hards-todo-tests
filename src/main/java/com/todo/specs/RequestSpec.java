@@ -24,7 +24,7 @@ public class RequestSpec {
         return requestSpecBuilder;
     }
 
-    public RequestSpecification unauthSpec() {
+    public static RequestSpecification unauthSpec() {
         return baseSpecBuilder().build();
     }
 
