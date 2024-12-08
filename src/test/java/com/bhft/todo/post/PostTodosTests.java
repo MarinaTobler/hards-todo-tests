@@ -1,11 +1,16 @@
 package com.bhft.todo.post;
 
 import com.bhft.todo.BaseTest;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.todo.models.Todo;
 import com.todo.requests.TodoRequest;
+import com.todo.requests.UnvalidatedTodoRequest;
+import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.RequestSpec;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +39,15 @@ public class PostTodosTests extends BaseTest {
                 .then()
                 .statusCode(201)
                 .body(is(emptyOrNullString())); // Проверяем, что тело ответа пустое
+
+//Updated version 1 after Lesson-1:
+//        String actualResponseBodyAsSting = new ValidatedTodoRequest(RequestSpec.authSpec())
+//                .create(newTodo);
+//        Assertions.assertEquals(emptyOrNullString(), actualResponseBodyAsSting);
+//Updated version 2 after Lesson-1:
+        Object actualResponseBody = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(newTodo);
+        Assertions.assertEquals(emptyOrNullString(), actualResponseBody);
 
         // Проверяем, что TODO было успешно создано
         Todo[] todos = given()
@@ -75,6 +89,22 @@ public class PostTodosTests extends BaseTest {
                 .statusCode(400)
                 .contentType(ContentType.TEXT)
                 .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
+
+// Updated version 1 after Lesson-1:
+//        Todo todoWithoutText = new Todo(1, null, true);
+//        Object actualResponse = new TodoRequest(RequestSpec.authSpec())
+//                .create(todoWithoutText)
+//                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+//                .body(notNullValue());
+//Updated version 2 after Lesson-1:
+// ?? как вставить json вместо Todo?
+// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
+// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
+        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(invalidTodoJson)
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.TEXT)
+                .body(notNullValue());
     }
 
     /**
@@ -96,6 +126,10 @@ public class PostTodosTests extends BaseTest {
                 .then()
                 .statusCode(201)
                 .body(is(emptyOrNullString())); // Проверяем, что тело ответа пустое
+//Updated version after Lesson-1:
+        Object actualResponseBody = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(newTodo);
+        Assertions.assertEquals(emptyOrNullString(), actualResponseBody);
 
         // Проверяем, что TODO было успешно создано
         Todo[] todos = given()
@@ -136,7 +170,18 @@ public class PostTodosTests extends BaseTest {
                 .statusCode(400)
                 .contentType(ContentType.TEXT)
                 .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
-    }
+
+//Updated version after Lesson-1:
+// ?? как вставить json вместо Todo?
+// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
+// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
+    String invalidTodoJson = "{ \"id\": 3, \"text\": \"djjdjd\", \"completed\": \"String\" }";
+    new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
+            .create(invalidTodoJson)
+            .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+            .contentType(ContentType.TEXT)
+            .body(notNullValue());
+}
 
     /**
      * TC5: Создание TODO с уже существующим 'id' (если 'id' задается клиентом).
@@ -160,6 +205,15 @@ public class PostTodosTests extends BaseTest {
                 .statusCode(400) // Конфликт при дублировании 'id'
                 //.contentType(ContentType.TEXT)
                 .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
+
+//Updated version after Lesson-1:
+        new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(firstTodo);
+        new TodoRequest(RequestSpec.unauthSpec())
+                .create(duplicateTodo)
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.TEXT)
+                .body(is(notNullValue()));
     }
 
 }
