@@ -1,5 +1,6 @@
 package com.todo.requests;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -15,6 +16,7 @@ public class UnvalidatedTodoRequest extends Request {
     public Response create(String json) {
         return given()
                 .spec(reqSpec)
+                .contentType(ContentType.JSON)
                 .body(json)
                 .when()
                 .post(TODO_ENDPOINT);
@@ -23,6 +25,7 @@ public class UnvalidatedTodoRequest extends Request {
     public Response update(long id, String json) {
         return given()
                 .spec(reqSpec)
+                .contentType(ContentType.JSON)
                 .body(json)
                 .when()
                 .put(TODO_ENDPOINT + id);
