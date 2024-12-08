@@ -32,7 +32,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     }
 
     @Override
-    public Object update(long id, Todo entity) {
+    public Todo update(long id, Todo entity) {
         return new TodoRequest(reqSpec).update(id, entity)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().as(Todo.class);
