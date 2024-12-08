@@ -1,6 +1,7 @@
 package com.todo.requests;
 
 import com.todo.models.Todo;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
@@ -35,6 +36,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     public Todo update(long id, Todo entity) {
         return new TodoRequest(reqSpec).update(id, entity)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
                 .extract().as(Todo.class);
     }
 
