@@ -79,13 +79,8 @@ public class DeleteTodosTests extends BaseTest {
                 .body(is(emptyOrNullString())); // Проверяем, что тело ответа пустое
 
         // Получаем список всех TODO и проверяем, что удаленная задача отсутствует
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // Проверяем, что удаленная задача отсутствует в списке
         boolean found = false;
@@ -153,13 +148,8 @@ public class DeleteTodosTests extends BaseTest {
         //.body("error", notNullValue()); // Проверяем наличие сообщения об ошибке
 
         // Проверяем, что TODO не было удалено
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // Проверяем, что задача все еще присутствует в списке
         boolean found = false;
@@ -229,13 +219,8 @@ public class DeleteTodosTests extends BaseTest {
                 .body("error", notNullValue());
 
         // Проверяем, что TODO не было удалено
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // Проверяем, что задача все еще присутствует в списке
         boolean found = false;
@@ -263,13 +248,8 @@ public class DeleteTodosTests extends BaseTest {
                 .body("error", notNullValue());
 
         // Дополнительно можем проверить, что список TODO не изменился
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // В данном случае, поскольку мы не добавляли задач с id 999, список должен быть пуст или содержать только ранее добавленные задачи
     }
