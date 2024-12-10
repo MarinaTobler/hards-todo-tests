@@ -7,7 +7,7 @@ import org.apache.http.HttpStatus;
 
 import java.util.List;
 
-public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>, SearchInterface{
+public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>, SearchInterface {
     public ValidatedTodoRequest(RequestSpecification reqSpec) {
         super(reqSpec);
     }
@@ -50,16 +50,16 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     }
 
     @Override
-    public List<Todo> readAll() {
+    public Todo[] readAll() {
         return new TodoRequest(reqSpec).readAll()
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
-                .extract().body().jsonPath().getList(".", Todo.class);
+                .extract().as(Todo[].class);
     }
 
     @Override
-    public List<Todo> readAll(int offset, int limit) {
+    public Todo[] readAll(int offset, int limit) {
         return new TodoRequest(reqSpec).readAll()
-                        .then().assertThat().statusCode(HttpStatus.SC_OK)
-                        .extract().body().jsonPath().getList(".", Todo.class);
+                .then().assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().as(Todo[].class);
     }
 }
