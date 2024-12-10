@@ -5,10 +5,7 @@ import com.todo.requests.TodoRequest;
 import com.todo.requests.UnvalidatedTodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.RequestSpec;
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +66,7 @@ public class PutTodosTests extends BaseTest {
 
         // Создаем TODO для обновления
         Todo originalTodo = new Todo(1, "Original Task", false);
-        new ValidatedTodoRequest(RequestSpec.authSpec())
+        new ValidatedTodoRequest(RequestSpec.authSpecForAdmin())
                 .create(originalTodo);
 
         // Обновленные данные
@@ -238,7 +235,7 @@ public class PutTodosTests extends BaseTest {
 //Updated version after Lesson-1:
         // Создаем TODO для обновления
         Todo originalTodo = new Todo(4, "Task without Changes", false);
-        new ValidatedTodoRequest(RequestSpec.authSpec())
+        new ValidatedTodoRequest(RequestSpec.authSpecForAdmin())
                 .create(originalTodo);
 
         // Отправляем PUT запрос с теми же данными
