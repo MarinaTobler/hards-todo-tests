@@ -78,13 +78,8 @@ public class PutTodosTests extends BaseTest {
         Assertions.assertEquals(updatedTodo, actualUpdatedTodo);
 
         // Проверяем, что данные были обновлены
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         Assertions.assertEquals(todos[0], updatedTodo);
 
@@ -244,13 +239,8 @@ public class PutTodosTests extends BaseTest {
                 .update(4, originalTodo);
 
         // Проверяем, что данные не изменились
-        Todo[] todo = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         Assertions.assertEquals("Task without Changes", todo[0].getText());
         Assertions.assertFalse(todo[0].isCompleted());
