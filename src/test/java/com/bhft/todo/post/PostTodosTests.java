@@ -74,13 +74,8 @@ public class PostTodosTests extends BaseTest {
         Assertions.assertEquals(emptyOrNullString(), actualResponseBody);
 
         // Проверяем, что TODO было успешно создано
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // Ищем созданную задачу в списке
         boolean found = false;
@@ -189,13 +184,8 @@ public class PostTodosTests extends BaseTest {
         Assertions.assertEquals(emptyOrNullString(), actualResponseBody);
 
         // Проверяем, что TODO было успешно создано
-        Todo[] todos = given()
-                .when()
-                .get("/todos")
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Todo[].class);
+        Todo[] todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
 
         // Ищем созданную задачу в списке
         boolean found = false;
