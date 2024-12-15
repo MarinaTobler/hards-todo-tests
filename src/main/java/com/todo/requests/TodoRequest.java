@@ -46,11 +46,22 @@ public class TodoRequest extends Request implements CrudInterface<Todo>, SearchI
                 .get(TODO_ENDPOINT);
     }
 
+//    @Override
+//    public Response readAll(int offset, int limit) {
+//        return given()
+//                .spec(reqSpec)
+//                .when()
+//                .get(TODO_ENDPOINT + "?offset=" + offset + "limit=" + limit);
+//    }
+// лучше переписать как ниже:
+
     @Override
     public Response readAll(int offset, int limit) {
         return given()
                 .spec(reqSpec)
+                .queryParam("offset", offset)
+                .queryParam("limit", limit)
                 .when()
-                .get(TODO_ENDPOINT + "?offset=" + offset + "limit=" + limit);
+                .get(TODO_ENDPOINT);
     }
 }
