@@ -28,18 +28,18 @@ public class PostTodosTests extends BaseTest {
     @Test
     public void testCreateTodoWithValidData() {
 // Updated version after Lesson-1:
-
         Todo newTodo = new Todo(1, "New Task", false);
 
-        // Отправляем POST запрос для создания нового Todo; в ответе получаем стринг и проверяем, что он пустой.
-        String actualResponseBody = new ValidatedTodoRequest(RequestSpec.unauthSpec())
-                .create(newTodo);
+        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
+        // Отправляем POST запрос для создания нового Todo
+        valAuthReq.create(newTodo);
+        // Не надо здесь проверять, что ответе получаем стринг и что он пустой.
+//        String actualResponseBody = valAuthReq.create(newTodo);
 //        Assertions.assertEquals(emptyOrNullString(), actualResponseBody); // Проверяем, что тело ответа пустое
-        assertThat(actualResponseBody).isNullOrEmpty(); // Проверяем, что тело ответа пустое
+//        assertThat(actualResponseBody).isNullOrEmpty(); // Проверяем, что тело ответа пустое
 
         // Проверяем, что TODO было успешно создано
-        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
-                .readAll();
+        List<Todo> todos = valAuthReq.readAll();
 
         // Ищем созданную задачу в списке
         boolean found = false;
@@ -147,18 +147,14 @@ public class PostTodosTests extends BaseTest {
 
         // Сначала создаем TODO с id = 5
         Todo firstTodo = new Todo(5, "First Task", false);
-        createTodo(firstTodo);
+        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
+        authValReq.create(firstTodo);
 
         // Пытаемся создать другую TODO с тем же id
         Todo duplicateTodo = new Todo(5, "Duplicate Task", true);
-
-        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
         // ? Надо здесь использовать ТоdoRequest или ValidatedTodoRequest?
-        TodoRequest authSimpleReq = new TodoRequest(RequestSpec.authSpecForAdmin());
-
-        authValReq.create(firstTodo);
-        authSimpleReq
-                .create(duplicateTodo)
+        TodoRequest authTodoReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+        authTodoReq.create(duplicateTodo)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST) // Конфликт при дублировании 'id'

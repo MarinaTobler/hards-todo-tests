@@ -40,17 +40,18 @@ public class PutTodosTests extends BaseTest {
 
         // Обновленные данные
         Todo updatedTodo = new Todo(1, "Updated Task", true);
-
         // Отправляем PUT запрос для обновления
         // !! Здесь отправляем ValidatedTodoRequest!, кот. возвращает десерелизованный объект
-        Todo actualUpdatedTodo = authValReq.update(1, updatedTodo);
-
-        Assertions.assertEquals(updatedTodo, actualUpdatedTodo);
+//        Todo actualUpdatedTodo = authValReq.update(1, updatedTodo);
+        Todo actualUpdatedTodo = authValReq.update(originalTodo.getId(), updatedTodo);
 
         // Проверяем, что данные были обновлены
-        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
-                .readAll();
+        Assertions.assertEquals(updatedTodo, actualUpdatedTodo);
+        List<Todo> todos = authValReq.readAll();
         Assertions.assertEquals(todos.getFirst(), updatedTodo);
+        Assertions.assertEquals(1, todos.size());
+        Assertions.assertEquals("Updated Task", todos.getFirst().getText());
+        Assertions.assertTrue(todos.getFirst().isCompleted());
     }
 
     /**
@@ -64,8 +65,7 @@ public class PutTodosTests extends BaseTest {
         Todo updatedTodo = new Todo(999, "Non-existent Task", true);
 
         TodoRequest todoReq = new TodoRequest(RequestSpec.unauthSpec());
-        todoReq
-                .update(999, updatedTodo)
+        todoReq.update(updatedTodo.getId(), updatedTodo)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
@@ -125,25 +125,20 @@ public class PutTodosTests extends BaseTest {
     @Test
     public void testUpdateTodoWithoutChangingData() {
 //Updated version after Lesson-1:
-        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
 
         // Создаем TODO для обновления
         Todo originalTodo = new Todo(4, "Task without Changes", false);
-
+        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
         valAuthReq.create(originalTodo);
 
         // Отправляем PUT запрос с теми же данными
-
-        Todo actualTodo = valAuthReq
-                .update(4, originalTodo);
+        Todo actualTodo = valAuthReq.update(4, originalTodo);
 
         // Проверяем, что данные не изменились
-        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
-                .readAll();
-
-//        Assertions.assertEquals("Task without Changes", todo[0].getText());
-//        Assertions.assertFalse(todo[0].isCompleted());
-//        Assertions.assertEquals(originalTodo, todo[0]);
+        List<Todo> todos = valAuthReq.readAll();
         Assertions.assertEquals(originalTodo, actualTodo);
+        Assertions.assertEquals(originalTodo, todos.getFirst());
+        Assertions.assertEquals("Task without Changes", todos.getFirst().getText());
+        Assertions.assertFalse(todos.getFirst().isCompleted());
     }
 }
