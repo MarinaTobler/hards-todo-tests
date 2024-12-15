@@ -5,7 +5,9 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.given;
-
+/*
+этот класс не нужен, т.к. в api тестах мы не проверяем контрактное тестирование
+ */
 public class UnvalidatedTodoRequest extends Request {
     private static final String TODO_ENDPOINT = "/todos";
 
