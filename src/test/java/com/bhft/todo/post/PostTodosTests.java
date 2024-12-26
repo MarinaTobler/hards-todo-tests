@@ -2,6 +2,7 @@ package com.bhft.todo.post;
 
 import com.bhft.todo.BaseTest;
 import com.todo.models.Todo;
+import com.todo.models.TodoBuilder;
 import com.todo.requests.TodoRequest;
 import com.todo.requests.UnvalidatedTodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
@@ -58,12 +59,11 @@ public class PostTodosTests extends BaseTest {
     /**
      * TC2: Попытка создания TODO с отсутствующими обязательными полями.
      */
-//    @Test
-//    public void testCreateTodoWithMissingFields() {
+    @Test
+    public void testCreateTodoWithMissingFields() {
 //
 //        // Создаем JSON без обязательного поля 'text'
 //        String invalidTodoJson = "{ \"id\": 2, \"completed\": true }";
-//
 //// ?? как вставить json вместо Todo?
 //// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
 //// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
@@ -72,7 +72,19 @@ public class PostTodosTests extends BaseTest {
 //                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
 //                .contentType(ContentType.TEXT)
 //                .body(notNullValue());
-//    }
+//   NB!   Вместо этого используем Builder (который позволяет не вставлять все поля):
+
+        Todo newTodo = new TodoBuilder()
+                .setText("text")
+                .build();
+
+        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+        authReq.create(newTodo)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.TEXT)
+                .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
+    }
 
     /**
      * TC3: Создание TODO с максимально допустимой длиной поля 'text'.
@@ -118,25 +130,28 @@ public class PostTodosTests extends BaseTest {
     /**
      * TC4: Передача некорректных типов данных в полях.
      */
-//    @Test
-//    public void testCreateTodoWithInvalidDataTypes() {
+    @Test
+    public void testCreateTodoWithInvalidDataTypes() {
 //        // Поле 'completed' содержит строку вместо булевого значения
 //        Todo newTodo = new Todo(3, "djjdjd", false);
 //// ?? как вставить json вместо Todo?
 //// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
 //// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
 //        String invalidTodoJson = "{ \"id\": 3, \"text\": \"djjdjd\", \"completed\": \"String\" }";
-//
 //        UnvalidatedTodoRequest todoRequest = new UnvalidatedTodoRequest(RequestSpec.authSpecForAdmin());
-//
-//        todoRequest
-//                .create(invalidTodoJson)
-//                .then()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_BAD_REQUEST)
-//                .contentType(ContentType.TEXT)
-//                .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
-//    }
+//    Вместо этого используем Builder
+
+        Todo newTodo = new TodoBuilder()
+                .setText("text")
+                .build();
+
+        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+        authReq.create(newTodo)
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.TEXT)
+                .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
+    }
 
     /**
      * TC5: Создание TODO с уже существующим 'id' (если 'id' задается клиентом).
