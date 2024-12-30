@@ -1,6 +1,10 @@
 package com.bhft.todo;
 
+import com.todo.requests.TodoRequest;
+import com.todo.specs.RequestSpec;
+import com.todo.storages.TestDataStorage;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import com.todo.models.Todo;
 
@@ -43,5 +47,15 @@ public class BaseTest {
                     .then()
                     .statusCode(204);
         }
+    }
+
+    @AfterEach
+    public void clean() {
+        TestDataStorage.getInstance().getStorage()
+                .forEach((k, v) ->
+                        new TodoRequest(RequestSpec.authSpecForAdmin())
+                                .delete(k));
+
+        TestDataStorage.getInstance().clean();
     }
 }
