@@ -176,4 +176,10 @@ public class PostTodosTests extends BaseTest {
                 .contentType(ContentType.TEXT)
                 .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
     }
+
+    // sozddaj 100 todo
+    // pomet' todo kak completed
+
+    // padenije
+    // FAIL FIRST
 }
