@@ -6,7 +6,8 @@ import com.todo.models.TodoBuilder;
 import com.todo.requests.TodoRequest;
 import com.todo.requests.UnvalidatedTodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
-import com.todo.specs.RequestSpec;
+import com.todo.specs.request.RequestSpec;
+import com.todo.specs.response.IncorrectDataResponse;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
@@ -158,23 +159,42 @@ public class PostTodosTests extends BaseTest {
      */
     @Test
     public void testCreateTodoWithExistingId() {
-//Updated version after Lesson-1:
 
         // Сначала создаем TODO с id = 5
         Todo firstTodo = new Todo(5, "First Task", false);
-        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
-        authValReq.create(firstTodo);
+//        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
+//        authValReq.create(firstTodo);
+        createTodo(firstTodo);
 
         // Пытаемся создать другую TODO с тем же id
         Todo duplicateTodo = new Todo(5, "Duplicate Task", true);
+
         // ? Надо здесь использовать ТоdoRequest или ValidatedTodoRequest?
-        TodoRequest authTodoReq = new TodoRequest(RequestSpec.authSpecForAdmin());
-        authTodoReq.create(duplicateTodo)
+        // 1. Улучшение:
+//        TodoRequest authTodoReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+//        authTodoReq.create(duplicateTodo)
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.SC_BAD_REQUEST) // Конфликт при дублировании 'id'
+//                .contentType(ContentType.TEXT)
+//                .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
+//
+//        // 2. Улучшение:
+//        new TodoRequest(RequestSpec.authSpecForAdmin())
+//                .create(duplicateTodo)
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.SC_BAD_REQUEST) // Конфликт при дублировании 'id'
+//                .contentType(ContentType.TEXT)
+//                .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
+
+        // 3. Улучшение - паттерн Стратегия: используем спецификацию IncorrectDataResponse
+        new TodoRequest(RequestSpec.authSpecForAdmin())
+                .create(duplicateTodo)
                 .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST) // Конфликт при дублировании 'id'
-                .contentType(ContentType.TEXT)
-                .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
+                // для обычных вариантов:
+//                .spec(new IncorrectDataResponse().sameId(firstTodo.getId()));
+                .spec(new IncorrectDataResponse().sameId());
     }
 
     // sozddaj 100 todo
