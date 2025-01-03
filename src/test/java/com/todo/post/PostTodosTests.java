@@ -28,19 +28,20 @@ public class PostTodosTests extends BaseTest {
 
     @Test
     public void testCreateTodoWithValidData() {
-// Updated version after Lesson-1:
         Todo newTodo = new Todo(1, "New Task", false);
 
-        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
         // Отправляем POST запрос для создания нового Todo
-        valAuthReq.create(newTodo);
+//        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
+//        valAuthReq.create(newTodo);
+        todoRequester.getValidatedRequest().create(newTodo);
         // Не надо здесь проверять, что ответе получаем стринг и что он пустой.
 //        String actualResponseBody = valAuthReq.create(newTodo);
 //        Assertions.assertEquals(emptyOrNullString(), actualResponseBody); // Проверяем, что тело ответа пустое
 //        assertThat(actualResponseBody).isNullOrEmpty(); // Проверяем, что тело ответа пустое
 
         // Проверяем, что TODO было успешно создано
-        List<Todo> todos = valAuthReq.readAll();
+//        List<Todo> todos = valAuthReq.readAll();
+        List<Todo> todos = todoRequester.getValidatedRequest().readAll();
 
         // Ищем созданную задачу в списке
         boolean found = false;
@@ -170,9 +171,10 @@ public class PostTodosTests extends BaseTest {
 
         // Сначала создаем TODO с id = 5
         Todo firstTodo = new Todo(5, "First Task", false);
+        createTodo(firstTodo);
 //        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
 //        authValReq.create(firstTodo);
-        createTodo(firstTodo);
+//        todoRequester.getValidatedRequest().create(firstTodo);
 
         // Пытаемся создать другую TODO с тем же id
         Todo duplicateTodo = new Todo(5, "Duplicate Task", true);
