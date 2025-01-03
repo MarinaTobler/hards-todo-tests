@@ -1,6 +1,6 @@
-package com.bhft.todo.post;
+package com.todo.post;
 
-import com.bhft.todo.BaseTest;
+import com.todo.BaseTest;
 import com.todo.models.Todo;
 import com.todo.models.TodoBuilder;
 import com.todo.requests.TodoRequest;

@@ -1,8 +1,7 @@
-package com.bhft.todo.delete;
+package com.todo.delete;
 
-import com.bhft.todo.BaseTest;
+import com.todo.BaseTest;
 import com.todo.models.Todo;
-import com.todo.requests.TodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.request.RequestSpec;
 import org.apache.http.HttpStatus;

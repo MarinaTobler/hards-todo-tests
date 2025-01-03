@@ -1,4 +1,4 @@
-package com.bhft.todo;
+package com.todo;
 
 import com.todo.requests.TodoRequest;
 import com.todo.requests.TodoRequester;

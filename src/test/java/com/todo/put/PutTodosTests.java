@@ -1,12 +1,7 @@
-package com.bhft.todo.put;
+package com.todo.put;
 
-import com.bhft.todo.BaseTest;
+import com.todo.BaseTest;
 import com.todo.models.Todo;
-import com.todo.requests.TodoRequest;
-import com.todo.requests.ValidatedTodoRequest;
-import com.todo.specs.request.RequestSpec;
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

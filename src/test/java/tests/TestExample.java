@@ -1,6 +1,6 @@
 package tests;
 
-import com.bhft.todo.BaseTest;
+import com.todo.BaseTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;

@@ -1,7 +1,7 @@
-package com.bhft.todo.get;
+package com.todo.get;
 
 
-import com.bhft.todo.BaseTest;
+import com.todo.BaseTest;
 import com.todo.annotations.DataPreparationExtension;
 import com.todo.annotations.Mobile;
 import com.todo.annotations.MobileExecutionExtension;
