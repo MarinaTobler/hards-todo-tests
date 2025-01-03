@@ -5,6 +5,7 @@ import com.todo.BaseTest;
 import com.todo.annotations.DataPreparationExtension;
 import com.todo.annotations.Mobile;
 import com.todo.annotations.MobileExecutionExtension;
+import com.todo.annotations.MobilePlusDataPreparationExtension;
 import com.todo.annotations.PrepareTodo;
 import com.todo.requests.TodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
@@ -30,8 +31,9 @@ import java.util.List;
 
 @Epic("TODO Management")
 @Feature("Get Todos API")
-@ExtendWith(DataPreparationExtension.class)
-@ExtendWith(MobileExecutionExtension.class)
+//@ExtendWith(DataPreparationExtension.class)
+//@ExtendWith(MobileExecutionExtension.class)
+@ExtendWith(MobilePlusDataPreparationExtension.class)
 public class GetTodosTests extends BaseTest {
 
     @BeforeEach
@@ -52,6 +54,7 @@ public class GetTodosTests extends BaseTest {
     }
 
     @Test
+//    @Mobile
     @Description("Получение списка TODO с существующими записями")
     public void testGetTodosWithExistingEntries() {
         // Предварительно создать несколько TODO
@@ -61,10 +64,10 @@ public class GetTodosTests extends BaseTest {
 //        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
 //        validatedTodoRequest.create(todo1);
 //        validatedTodoRequest.create(todo2);
-//        todoRequester.getValidatedRequest().create(todo1);
-//        todoRequester.getValidatedRequest().create(todo2);
-        createTodo(todo1);
-        createTodo(todo2);
+        todoRequester.getValidatedRequest().create(todo1);
+        todoRequester.getValidatedRequest().create(todo2);
+//        createTodo(todo1);
+//        createTodo(todo2);
 
 //        Response response =
 //                given()
@@ -99,8 +102,8 @@ public class GetTodosTests extends BaseTest {
     }
 
     @Test
-    @PrepareTodo(5)
     @Mobile // extension тут -> 1 вариант: properties (config), 2 вариант: storage request
+    @PrepareTodo(5)
     @Description("Использование параметров offset и limit для пагинации")
     public void testGetTodosWithOffsetAndLimit() {
 //        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
