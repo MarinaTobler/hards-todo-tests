@@ -4,7 +4,6 @@ import com.todo.models.Todo;
 import com.todo.requests.interfaces.CrudInterface;
 import com.todo.requests.interfaces.SearchInterface;
 import com.todo.storages.TestDataStorage;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
@@ -31,6 +30,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .extract().asString();
+        // добавление в TestDataStorage entity, кот. только что создали
         TestDataStorage.getInstance().addData(entity);
         return response;
     }
