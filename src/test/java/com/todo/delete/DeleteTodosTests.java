@@ -4,13 +4,17 @@ import com.todo.BaseTest;
 import com.todo.models.Todo;
 import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.request.RequestSpec;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -60,42 +64,42 @@ public class DeleteTodosTests extends BaseTest {
         Assertions.assertFalse(found, "Удаленная задача все еще присутствует в списке TODO");
     }
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
     /**
      * TC2: Попытка удаления TODO без заголовка Authorization.
      */
-//    @Test
-//    public void testDeleteTodoWithoutAuthHeader() {
-////Updated version after Lesson-1:
-//        // Создаем TODO для удаления
-//        Todo todo = new Todo(2, "Task to Delete", false);
-//        new ValidatedTodoRequest(RequestSpec.unauthSpec())
-//                .create(todo);
-//
-////??? Отправляем DELETE запрос без заголовка Authorization ??? Как переписать, когда есть спецификация?
-//        given()
-//                .filter(new AllureRestAssured())
-//                .when()
-//                .delete("/todos/" + todo.getId())
-//                .then()
-//                .statusCode(401);
-//        //.contentType(ContentType.JSON)
-//        //.body("error", notNullValue()); // Проверяем наличие сообщения об ошибке
-//
-//        // Проверяем, что TODO не было удалено
-//        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
-//                .readAll();
-//
-//        // Проверяем, что задача все еще присутствует в списке
-//        boolean found = false;
-//        for (Todo t : todos) {
-//            if (t.getId() == todo.getId()) {
-//                found = true;
-//                break;
-//            }
-//        }
-//        Assertions.assertTrue(found, "Задача отсутствует в списке TODO, хотя не должна была быть удалена");
-//    }
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+    @Test
+    public void testDeleteTodoWithoutAuthHeader() {
+//Updated version after Lesson-1:
+        // Создаем TODO для удаления
+        Todo todo = new Todo(2, "Task to Delete", false);
+        new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(todo);
+
+//??? Отправляем DELETE запрос без заголовка Authorization ??? Как переписать, когда есть спецификация?
+        given()
+                .filter(new AllureRestAssured())
+                .when()
+                .delete("/todos/" + todo.getId())
+                .then()
+                .statusCode(401);
+        //.contentType(ContentType.JSON)
+        //.body("error", notNullValue()); // Проверяем наличие сообщения об ошибке
+
+        // Проверяем, что TODO не было удалено
+        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .readAll();
+
+        // Проверяем, что задача все еще присутствует в списке
+        boolean found = false;
+        for (Todo t : todos) {
+            if (t.getId() == todo.getId()) {
+                found = true;
+                break;
+            }
+        }
+        Assertions.assertTrue(found, "Задача отсутствует в списке TODO, хотя не должна была быть удалена");
+    }
 
     /**
      * TC3: Попытка удаления TODO с некорректными учетными данными.
@@ -108,7 +112,6 @@ public class DeleteTodosTests extends BaseTest {
         Todo todo = new Todo(3, "Task to Delete", false);
         ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
         valAuthReq.create(todo);
-
 
 
         // Отправляем DELETE запрос с некорректной авторизацией
@@ -161,24 +164,24 @@ public class DeleteTodosTests extends BaseTest {
         // В данном случае, поскольку мы не добавляли задач с id 999, список должен быть пуст или содержать только ранее добавленные задачи
     }
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
     /**
      * TC5: Попытка удаления с некорректным форматом id (например, строка вместо числа).
      */
-//    @Test
-//    public void testDeleteTodoWithInvalidIdFormat() {
-    // Отправляем DELETE запрос с некорректным id
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+    @Test
+    public void testDeleteTodoWithInvalidIdFormat() {
+//     Отправляем DELETE запрос с некорректным id
 //??? Как в этом случае посылать String вместо long в TodoRequest delete требует long id?
-//        given()
-//                .filter(new AllureRestAssured())
-//                .auth()
-//                .preemptive()
-//                .basic("admin", "admin")
-//                .when()
-//                .delete("/todos/invalidId")
-//                .then()
-//                .statusCode(404);
-//                .contentType(ContentType.JSON)
-//                .body("error", notNullValue());
-//    }
+        given()
+                .filter(new AllureRestAssured())
+                .auth()
+                .preemptive()
+                .basic("admin", "admin")
+                .when()
+                .delete("/todos/invalidId")
+                .then()
+                .statusCode(404)
+                .contentType(ContentType.JSON)
+                .body("error", notNullValue());
+    }
 }

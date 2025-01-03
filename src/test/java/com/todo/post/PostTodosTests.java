@@ -11,6 +11,7 @@ import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -56,10 +57,10 @@ public class PostTodosTests extends BaseTest {
         Assertions.assertTrue(found, "Созданная задача не найдена в списке TODO");
     }
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
     /**
      * TC2: Попытка создания TODO с отсутствующими обязательными полями.
      */
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
     @Test
     public void testCreateTodoWithMissingFields() {
 //
@@ -134,10 +135,10 @@ public class PostTodosTests extends BaseTest {
         Assertions.assertTrue(found, "Созданная задача не найдена в списке TODO");
     }
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
     /**
      * TC4: Передача некорректных типов данных в полях.
      */
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
     @Test
     public void testCreateTodoWithInvalidDataTypes() {
 //        // Поле 'completed' содержит строку вместо булевого значения

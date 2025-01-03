@@ -2,14 +2,20 @@ package com.todo.put;
 
 import com.todo.BaseTest;
 import com.todo.models.Todo;
+import com.todo.requests.UnvalidatedTodoRequest;
+import com.todo.requests.ValidatedTodoRequest;
+import com.todo.specs.request.RequestSpec;
+import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -75,7 +81,7 @@ public class PutTodosTests extends BaseTest {
 
 //        TodoRequest todoReq = new TodoRequest(RequestSpec.unauthSpec());
 //        todoReq.update(updatedTodo.getId(), updatedTodo)
-                todoRequester.getRequest().update(updatedTodo.getId(), updatedTodo)
+        todoRequester.getRequest().update(updatedTodo.getId(), updatedTodo)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
@@ -83,51 +89,51 @@ public class PutTodosTests extends BaseTest {
     }
 
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
     /**
      * TC3: Обновление TODO с отсутствием обязательных полей.
      */
-//    @Test
-//    public void testUpdateTodoWithMissingFields() {
-////Updated version after Lesson-1:
-//        // Создаем TODO для обновления
-//        Todo originalTodo = new Todo(2, "Task to Update", false);
-//        new ValidatedTodoRequest(RequestSpec.unauthSpec())
-//                .create(originalTodo);
-//
-//        // Обновленные данные с отсутствующим полем 'text'
-//        String invalidTodoJson = "{ \"id\": 2, \"completed\": true }";
-//
-//        // Почему 401 Unauthorized? должен же быть 400 BadRequest?
-//        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
-//                .update(2, invalidTodoJson)
-//                .then().assertThat()
-//                .statusCode(HttpStatus.SC_BAD_REQUEST)
-//                .contentType(ContentType.JSON)
-//                .body("error", containsString("Missing required field 'text'"));
-//    }
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+    @Test
+    public void testUpdateTodoWithMissingFields() {
+//Updated version after Lesson-1:
+        // Создаем TODO для обновления
+        Todo originalTodo = new Todo(2, "Task to Update", false);
+        new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(originalTodo);
 
-    /// NB! Этот тест не нужен, т.к. этo контрактное тестирование!
+        // Обновленные данные с отсутствующим полем 'text'
+        String invalidTodoJson = "{ \"id\": 2, \"completed\": true }";
+
+        // Почему 401 Unauthorized? должен же быть 400 BadRequest?
+        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
+                .update(2, invalidTodoJson)
+                .then().assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .contentType(ContentType.JSON)
+                .body("error", containsString("Missing required field 'text'"));
+    }
+
     /**
      * TC4: Передача некорректных типов данных при обновлении.
      */
-//    @Test
-//    public void testUpdateTodoWithInvalidDataTypes() {
-//
-////Updated version after Lesson-1:
-//        // Создаем TODO для обновления
-//        Todo originalTodo = new Todo(3, "Another Task", false);
-//        new ValidatedTodoRequest(RequestSpec.unauthSpec())
-//                .create(originalTodo);
-//        // Обновленные данные с некорректным типом поля 'completed'
-//        String invalidTodoJson = "{ \"id\": 3, \"text\": \"Updated Task\", \"completed\": \"notBoolean\" }";
-//
-//        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
-//                .update(3, invalidTodoJson)
-//                .then().assertThat()
-//// Почему 401 Unauthorized? должен же быть 400 BadRequest?
-//                .statusCode(HttpStatus.SC_BAD_REQUEST);
-//    }
+    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+    @Test
+    public void testUpdateTodoWithInvalidDataTypes() {
+
+//Updated version after Lesson-1:
+        // Создаем TODO для обновления
+        Todo originalTodo = new Todo(3, "Another Task", false);
+        new ValidatedTodoRequest(RequestSpec.unauthSpec())
+                .create(originalTodo);
+        // Обновленные данные с некорректным типом поля 'completed'
+        String invalidTodoJson = "{ \"id\": 3, \"text\": \"Updated Task\", \"completed\": \"notBoolean\" }";
+
+        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
+                .update(3, invalidTodoJson)
+                .then().assertThat()
+// Почему 401 Unauthorized? должен же быть 400 BadRequest?
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
 
     /**
      * TC5: Обновление TODO без изменения данных (передача тех же значений).
