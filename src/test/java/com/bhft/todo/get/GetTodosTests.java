@@ -6,7 +6,7 @@ import com.todo.annotations.DataPreparationExtension;
 import com.todo.annotations.PrepareTodo;
 import com.todo.requests.TodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
-import com.todo.specs.RequestSpec;
+import com.todo.specs.request.RequestSpec;
 import io.qameta.allure.*;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
@@ -16,9 +16,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+
 import com.todo.models.Todo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,8 +39,9 @@ public class GetTodosTests extends BaseTest {
     @Test
     @Description("Получение пустого списка TODO, когда база данных пуста")
     public void testGetTodosWhenDatabaseIsEmpty() {
-        TodoRequest todoRequest = new TodoRequest(RequestSpec.unauthSpec());
-        todoRequest.readAll()
+//        TodoRequest todoRequest = new TodoRequest(RequestSpec.unauthSpec());
+//        todoRequest.readAll()
+        todoRequester.getRequest().readAll()
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -52,12 +55,28 @@ public class GetTodosTests extends BaseTest {
         Todo todo1 = new Todo(1, "Task 1", false);
         Todo todo2 = new Todo(2, "Task 2", true);
 
-        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
-        validatedTodoRequest.create(todo1);
-        validatedTodoRequest.create(todo2);
+//        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
+//        validatedTodoRequest.create(todo1);
+//        validatedTodoRequest.create(todo2);
+//        todoRequester.getValidatedRequest().create(todo1);
+//        todoRequester.getValidatedRequest().create(todo2);
+        createTodo(todo1);
+        createTodo(todo2);
 
+//        Response response =
+//                given()
+//                        .filter(new AllureRestAssured())
+//                        .when()
+//                        .get("/todos")
+//                        .then()
+//                        .statusCode(200)
+//                        .contentType("application/json")
+//                        .body("", hasSize(2))
+//                        .extract().response();
 
-        Response response = new TodoRequest(RequestSpec.unauthSpec()).readAll()
+//        Response response = new TodoRequest(RequestSpec.unauthSpec()).readAll()
+        // ?? д.б. validated request?
+        Response response = todoRequester.getRequest().readAll()
                 .then()
                 .statusCode(200)
                 .contentType("application/json")
@@ -80,7 +99,7 @@ public class GetTodosTests extends BaseTest {
     @PrepareTodo(5)
     @Description("Использование параметров offset и limit для пагинации")
     public void testGetTodosWithOffsetAndLimit() {
-        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
+//        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
 
         // Создаем 5 TODO
 //        for (int i = 1; i <= 5; i++) {
@@ -88,7 +107,8 @@ public class GetTodosTests extends BaseTest {
 //        }
 
         // Проверяем, что получили задачи с id 3 и 4
-        List<Todo> todos = validatedTodoRequest.readAll(2,2);
+//        List<Todo> todos = validatedTodoRequest.readAll(2, 2);
+        List<Todo> todos = todoRequester.getValidatedRequest().readAll(2, 2);
 
         Assertions.assertEquals(todos.size(), 2);
     }
@@ -157,13 +177,30 @@ public class GetTodosTests extends BaseTest {
     @Test
     @DisplayName("Проверка ответа при превышении максимально допустимого значения limit")
     public void testGetTodosWithExcessiveLimit() {
-        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
+//        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
         // Создаем 10 TODO
         for (int i = 1; i <= 10; i++) {
-            validatedTodoRequest.create(new Todo(i, "Task " + i, i % 2 == 0));
+//            createTodo(new Todo(i, "Task " + i, i % 2 == 0));
+//            validatedTodoRequest.create(new Todo(i, "Task " + i, i % 2 == 0));
+            todoRequester.getValidatedRequest().create(new Todo(i, "Task " + i, i % 2 == 0));
         }
-        List<Todo> todos = validatedTodoRequest.readAll(0, 1000);
+//        Response response =
+//                given()
+//                        .filter(new AllureRestAssured())
+//                        .queryParam("limit", 1000)
+//                        .when()
+//                        .get("/todos")
+//                        .then()
+//                        .statusCode(200)
+//                        .contentType("application/json")
+//                        .extract().response();
+//
+//        Todo[] todos = response.getBody().as(Todo[].class);
+
+//        List<Todo> todos = validatedTodoRequest.readAll(0, 1000);
+        List<Todo> todos = todoRequester.getValidatedRequest().readAll(0, 1000);
         // Проверяем, что вернулось 10 задач
+//        Assertions.assertEquals(10, todos.length);
         Assertions.assertEquals(10, todos.size());
     }
 }

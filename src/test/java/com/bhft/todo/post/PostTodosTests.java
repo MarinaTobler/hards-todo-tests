@@ -4,7 +4,6 @@ import com.bhft.todo.BaseTest;
 import com.todo.models.Todo;
 import com.todo.models.TodoBuilder;
 import com.todo.requests.TodoRequest;
-import com.todo.requests.UnvalidatedTodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.request.RequestSpec;
 import com.todo.specs.response.IncorrectDataResponse;
@@ -98,9 +97,14 @@ public class PostTodosTests extends BaseTest {
         String maxLengthText = "A".repeat(255);
         Todo newTodo = new Todo(3, maxLengthText, false);
 
-        ValidatedTodoRequest authValReg = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
         // Отправляем POST запрос для создания нового TODO
-        authValReg.create(newTodo);
+
+        // Улучшение 1:
+//        ValidatedTodoRequest authValReg = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
+//        authValReg.create(newTodo);
+
+        // Улучшение 2: заменяем на использование фасада - todoRequester'a:
+        todoRequester.getValidatedRequest().create(newTodo);
 
         // В этом тесте не надо проверять, что Response body empty, проверяем только, что тодо создаётся.
 //      String actualResponseBody = new ValidatedTodoRequest(RequestSpec.unauthSpec())
@@ -112,7 +116,9 @@ public class PostTodosTests extends BaseTest {
 //        List<Todo> todos = new ValidatedTodoRequest(RequestSpec.unauthSpec())
 //                .readAll();
 //      Пишем:
-        List<Todo> todos = authValReg.readAll();
+//        List<Todo> todos = authValReg.readAll();
+        // Улучшение 2: заменяем на использование фасада - todoRequester'a:
+        List<Todo> todos = todoRequester.getValidatedRequest().readAll();
 
         // Ищем созданную задачу в списке
         boolean found = false;
@@ -134,6 +140,7 @@ public class PostTodosTests extends BaseTest {
     @Test
     public void testCreateTodoWithInvalidDataTypes() {
 //        // Поле 'completed' содержит строку вместо булевого значения
+
 //        Todo newTodo = new Todo(3, "djjdjd", false);
 //// ?? как вставить json вместо Todo?
 //// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
@@ -145,9 +152,10 @@ public class PostTodosTests extends BaseTest {
         Todo newTodo = new TodoBuilder()
                 .setText("text")
                 .build();
-
-        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecForAdmin());
-        authReq.create(newTodo)
+// Нарушение инверсии зависимостей:
+//        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+//        authReq.create(newTodo)
+        todoRequester.getRequest().create(newTodo)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .contentType(ContentType.TEXT)
@@ -189,7 +197,9 @@ public class PostTodosTests extends BaseTest {
 //                .body(is(notNullValue())); // Проверяем, что есть сообщение об ошибке
 
         // 3. Улучшение - паттерн Стратегия: используем спецификацию IncorrectDataResponse
-        new TodoRequest(RequestSpec.authSpecForAdmin())
+//        new TodoRequest(RequestSpec.authSpecForAdmin())
+        // 4. Улучшение - используем фасад:
+        todoRequester.getRequest()
                 .create(duplicateTodo)
                 .then()
                 // для обычных вариантов:

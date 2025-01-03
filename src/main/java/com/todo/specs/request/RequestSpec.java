@@ -1,4 +1,4 @@
-package com.todo.specs;
+package com.todo.specs.request;
 
 import com.todo.models.User;
 import io.qameta.allure.restassured.AllureRestAssured;
