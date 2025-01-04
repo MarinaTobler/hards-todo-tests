@@ -14,6 +14,7 @@ import io.qameta.allure.*;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +29,7 @@ import com.todo.models.Todo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
+import java.util.Random;
 
 @Epic("TODO Management")
 @Feature("Get Todos API")
@@ -53,12 +55,26 @@ public class GetTodosTests extends BaseTest {
                 .body("", hasSize(0));
     }
 
+    public void userCanCreateTodoWithArabicText() {
+        // генерируем todo
+        // проставляем text=arabic
+        // создаем
+        // проверяем успех
+    }
+
+
     @Test
 //    @Mobile
     @Description("Получение списка TODO с существующими записями")
     public void testGetTodosWithExistingEntries() {
         // Предварительно создать несколько TODO
-        Todo todo1 = new Todo(1, "Task 1", false);
+//        Todo todo1 = new Todo(1, "Task 1", false);
+        // если только буквы:
+        Todo todo1 = new Todo(
+                Integer.valueOf(RandomStringUtils.randomNumeric(3)),
+                RandomStringUtils.randomAlphabetic(10),
+//                new Random().nextBoolean());
+                Math.random() < 0.5);
         Todo todo2 = new Todo(2, "Task 2", true);
 
 //        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
