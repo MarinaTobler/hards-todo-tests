@@ -2,10 +2,8 @@ package com.todo.get;
 
 
 import com.todo.BaseTest;
-import com.todo.annotations.DataPreparationExtension;
 import com.todo.annotations.Mobile;
-import com.todo.annotations.MobileExecutionExtension;
-import com.todo.annotations.MobilePlusDataPreparationExtension;
+import com.todo.annotations.BeforeEachExtension;
 import com.todo.annotations.PrepareTodo;
 import com.todo.requests.TodoRequest;
 import com.todo.requests.ValidatedTodoRequest;
@@ -14,7 +12,6 @@ import io.qameta.allure.*;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,13 +27,12 @@ import com.todo.models.Todo;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
-import java.util.Random;
 
 @Epic("TODO Management")
 @Feature("Get Todos API")
 //@ExtendWith(DataPreparationExtension.class)
 //@ExtendWith(MobileExecutionExtension.class)
-@ExtendWith(MobilePlusDataPreparationExtension.class)
+@ExtendWith(BeforeEachExtension.class)
 public class GetTodosTests extends BaseTest {
 
     @BeforeEach
