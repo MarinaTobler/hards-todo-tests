@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static com.todo.generators.TestDataGenerator.generateTestData;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
@@ -69,12 +70,18 @@ public class GetTodosTests extends BaseTest {
     public void testGetTodosWithExistingEntries() {
         // Предварительно создать несколько TODO
 //        Todo todo1 = new Todo(1, "Task 1", false);
-        // если только буквы:
-        Todo todo1 = new Todo(
-                Integer.valueOf(RandomStringUtils.randomNumeric(3)),
-                RandomStringUtils.randomAlphabetic(10),
+        // Random values:
+//        Todo todo1 = new Todo(
+//                Integer.valueOf(RandomStringUtils.randomNumeric(3)),
+//                // если только буквы:
+//                RandomStringUtils.randomAlphabetic(10),
 //                new Random().nextBoolean());
-                Math.random() < 0.5);
+        // Использование сгенерированного dto:
+        Todo todo1 = generateTestData(Todo.class);
+
+        // если нам надо сделать тест на проверку арабских символов в тексте
+        todo1.setText("arabic symbols");
+
         Todo todo2 = new Todo(2, "Task 2", true);
 
 //        ValidatedTodoRequest validatedTodoRequest = new ValidatedTodoRequest(RequestSpec.unauthSpec());
