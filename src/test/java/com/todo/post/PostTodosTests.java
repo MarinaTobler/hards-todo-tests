@@ -8,9 +8,11 @@ import com.todo.specs.request.RequestSpec;
 import com.todo.specs.response.IncorrectDataResponse;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.checkerframework.checker.index.qual.Positive;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class PostTodosTests extends BaseTest {
 //    }
 
     @Test
+    @Tag("Positive")
     public void testCreateTodoWithValidData() {
         Todo newTodo = new Todo(1, "New Task", false);
 
@@ -56,40 +59,41 @@ public class PostTodosTests extends BaseTest {
         Assertions.assertTrue(found, "Созданная задача не найдена в списке TODO");
     }
 
-    /**
-     * TC2: Попытка создания TODO с отсутствующими обязательными полями.
-     */
-    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
-    @Test
-    public void testCreateTodoWithMissingFields() {
+//    /**
+//     * TC2: Попытка создания TODO с отсутствующими обязательными полями.
+//     */
+//    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+//    @Test
+//    public void testCreateTodoWithMissingFields() {
+////
+////        // Создаем JSON без обязательного поля 'text'
+////        String invalidTodoJson = "{ \"id\": 2, \"completed\": true }";
+////// ?? как вставить json вместо Todo?
+////// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
+////// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
+////        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
+////                .create(invalidTodoJson)
+////                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+////                .contentType(ContentType.TEXT)
+////                .body(notNullValue());
+////   NB!   Вместо этого используем Builder (который позволяет не вставлять все поля):
 //
-//        // Создаем JSON без обязательного поля 'text'
-//        String invalidTodoJson = "{ \"id\": 2, \"completed\": true }";
-//// ?? как вставить json вместо Todo?
-//// мы не можем передать некорректный тип данных, если в TodoRequest в create запрашивается Todo,
-//// поэтому сделала UnvalidatedTodoRequest класс, в нём create принимает json и не имплементирует crud
-//        new UnvalidatedTodoRequest(RequestSpec.unauthSpec())
-//                .create(invalidTodoJson)
-//                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+//        Todo newTodo = new TodoBuilder()
+//                .setText("text")
+//                .build();
+//
+//        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecAsAdmin());
+//        authReq.create(newTodo)
+//                .then()
+//                .statusCode(HttpStatus.SC_BAD_REQUEST)
 //                .contentType(ContentType.TEXT)
-//                .body(notNullValue());
-//   NB!   Вместо этого используем Builder (который позволяет не вставлять все поля):
-
-        Todo newTodo = new TodoBuilder()
-                .setText("text")
-                .build();
-
-        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecAsAdmin());
-        authReq.create(newTodo)
-                .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .contentType(ContentType.TEXT)
-                .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
-    }
+//                .body(notNullValue()); // Проверяем, что есть сообщение об ошибке
+//    }
 
     /**
      * TC3: Создание TODO с максимально допустимой длиной поля 'text'.
      */
+    // NB! - также дб тест с мин длиной поля текст; проходимся по всем условиям и по всем требованиям к каждому из полей!
     @Test
     public void testCreateTodoWithMaxLengthText() {
 //Updated version after Lesson-1:
