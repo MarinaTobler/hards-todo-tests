@@ -35,10 +35,10 @@ import java.util.List;
 @ExtendWith(BeforeEachExtension.class)
 public class GetTodosTests extends BaseTest {
 
-    @BeforeEach
-    public void setupEach() {
-        deleteAllTodos();
-    }
+//    @BeforeEach
+//    public void setupEach() {
+//        deleteAllTodos();
+//    }
 
     @Test
     @Description("Получение пустого списка TODO, когда база данных пуста")
