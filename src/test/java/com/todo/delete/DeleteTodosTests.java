@@ -9,6 +9,8 @@ import com.todo.specs.request.RequestSpec;
 import com.todo.specs.response.AccessErrorResponse;
 import com.todo.specs.response.IncorrectDataResponse;
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
@@ -23,6 +25,8 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
+@Epic("TODO Management")
+@Feature("Delete Todos API")
 public class DeleteTodosTests extends BaseTest {
 
     // не надо это делать в к. тесте, делается один раз в BaseTest в @AfterEach - паттерн Декоратор!
@@ -134,46 +138,46 @@ public class DeleteTodosTests extends BaseTest {
 
     // Следующий тест кейс дублирует предыдущий!
 
-    /**
-     * TC3: Попытка удаления TODO с некорректными учетными данными.
-     */
-    //"Not-Authorized user. Delete ToDo."
-    @Test
-    @Disabled("Duplicates TC2")
-    public void testDeleteTodoWithInvalidAuth() {
-
-        // Создаем TODO для удаления
-        Todo todo = new Todo(3, "Task to Delete", false);
-        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecAsAdmin());
-        valAuthReq.create(todo);
-
-        // Отправляем DELETE запрос с некорректной авторизацией
-//        User user = new User("invalidUser", "invalidPass");
-//        TodoRequest todoReq = new TodoRequest(RequestSpec.authSpec(user));
-        // or !! с неавтроризованным юзером
-//        TodoRequest todoReq = new TodoRequest(RequestSpec.unauthSpec());
-//        todoReq
-        todoRequester.getRequest()
-                .delete(3)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_UNAUTHORIZED)
-                .body("error", notNullValue()); // проверяем, что есть сообщение об ошибке
-
-        // Проверяем, что TODO не было удалено
-//        List<Todo> todos = valAuthReq.readAll();
-        List<Todo> todos = todoRequester.getValidatedRequest().readAll();
-
-        // Проверяем, что задача все еще присутствует в списке
-        boolean found = false;
-        for (Todo t : todos) {
-            if (t.getId() == todo.getId()) {
-                found = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(found, "Задача отсутствует в списке TODO, хотя не должна была быть удалена");
-    }
+//    /**
+//     * TC3: Попытка удаления TODO с некорректными учетными данными.
+//     */
+//    //"Not-Authorized user. Delete ToDo."
+//    @Test
+//    @Disabled("Duplicates TC2")
+//    public void testDeleteTodoWithInvalidAuth() {
+//
+//        // Создаем TODO для удаления
+//        Todo todo = new Todo(3, "Task to Delete", false);
+//        ValidatedTodoRequest valAuthReq = new ValidatedTodoRequest(RequestSpec.authSpecAsAdmin());
+//        valAuthReq.create(todo);
+//
+//        // Отправляем DELETE запрос с некорректной авторизацией
+////        User user = new User("invalidUser", "invalidPass");
+////        TodoRequest todoReq = new TodoRequest(RequestSpec.authSpec(user));
+//        // or !! с неавтроризованным юзером
+////        TodoRequest todoReq = new TodoRequest(RequestSpec.unauthSpec());
+////        todoReq
+//        todoRequester.getRequest()
+//                .delete(3)
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.SC_UNAUTHORIZED)
+//                .body("error", notNullValue()); // проверяем, что есть сообщение об ошибке
+//
+//        // Проверяем, что TODO не было удалено
+////        List<Todo> todos = valAuthReq.readAll();
+//        List<Todo> todos = todoRequester.getValidatedRequest().readAll();
+//
+//        // Проверяем, что задача все еще присутствует в списке
+//        boolean found = false;
+//        for (Todo t : todos) {
+//            if (t.getId() == todo.getId()) {
+//                found = true;
+//                break;
+//            }
+//        }
+//        Assertions.assertTrue(found, "Задача отсутствует в списке TODO, хотя не должна была быть удалена");
+//    }
 
     //    /**
 //     * TC4: Удаление TODO с несуществующим id.
@@ -209,21 +213,21 @@ public class DeleteTodosTests extends BaseTest {
     //    /**
 //     * TC5: Попытка удаления с некорректным форматом id (например, строка вместо числа).
 //     */
-    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
-    @Test
-    public void testDeleteTodoWithInvalidIdFormat() {
-//     Отправляем DELETE запрос с некорректным id
-//??? Как в этом случае посылать String вместо long в TodoRequest delete требует long id?
-        given()
-                .filter(new AllureRestAssured())
-                .auth()
-                .preemptive()
-                .basic("admin", "admin")
-                .when()
-                .delete("/todos/invalidId")
-                .then()
-                .statusCode(404)
-                .contentType(ContentType.JSON)
-                .body("error", notNullValue());
-    }
+//    @Disabled("NB! Этот тест не нужен, т.к. этo контрактное тестирование!")
+//    @Test
+//    public void testDeleteTodoWithInvalidIdFormat() {
+////     Отправляем DELETE запрос с некорректным id
+////??? Как в этом случае посылать String вместо long в TodoRequest delete требует long id?
+//        given()
+//                .filter(new AllureRestAssured())
+//                .auth()
+//                .preemptive()
+//                .basic("admin", "admin")
+//                .when()
+//                .delete("/todos/invalidId")
+//                .then()
+//                .statusCode(404)
+//                .contentType(ContentType.JSON)
+//                .body("error", notNullValue());
+//    }
 }
