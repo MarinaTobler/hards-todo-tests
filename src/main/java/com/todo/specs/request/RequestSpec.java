@@ -29,14 +29,6 @@ public class RequestSpec {
         return baseSpecBuilder().build();
     }
 
-    public static RequestSpecification authSpecForAdmin() {
-        BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
-        basicAuthScheme.setUserName("admin");
-        basicAuthScheme.setPassword("admin");
-        baseSpecBuilder().setAuth(basicAuthScheme);
-        return baseSpecBuilder().build();
-    }
-
     public static RequestSpecification authSpec(User user) {
         BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
         basicAuthScheme.setUserName(user.getName());
@@ -44,4 +36,15 @@ public class RequestSpec {
         baseSpecBuilder().setAuth(basicAuthScheme);
         return baseSpecBuilder().build();
     }
+
+    public static RequestSpecification authSpecAsAdmin() {
+//        BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
+//        basicAuthScheme.setUserName("admin");
+//        basicAuthScheme.setPassword("admin");
+//        baseSpecBuilder().setAuth(basicAuthScheme);
+//        return baseSpecBuilder().build();
+        return authSpec(new User("admin", "admin"));
+    }
+
+
 }

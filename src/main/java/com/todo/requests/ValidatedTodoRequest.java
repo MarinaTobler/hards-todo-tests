@@ -4,6 +4,7 @@ import com.todo.models.Todo;
 import com.todo.requests.interfaces.CrudInterface;
 import com.todo.requests.interfaces.SearchInterface;
 import com.todo.storages.TestDataStorage;
+import io.qameta.allure.Step;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
@@ -24,6 +25,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     // пустую строку, то прямо здесь десерелизуем в строку и считаем, что она пустая:
     // "Create ToDo. Status code 201 and empty/null string has been received."
     @Override
+    @Step("Create {entity}")
     public String create(Todo entity) {
         var response = todoRequest.create(entity)
                 .then()
@@ -38,6 +40,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     // сразу десерелизуем в класс
     // "Update ToDo. Status code 200 and updated ToDo has been received."
     @Override
+    @Step("Update {entity}")
     public Todo update(long id, Todo entity) {
         return todoRequest.update(id, entity)
                 .then()
@@ -48,6 +51,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     // т.к. ответ должен быть пустой, то десерелизуем в строку, и проверяем, что она пустая
     // "Delete ToDo. Status code 200 and empty/null string has been received."
     @Override
+    @Step("Delete {id}")
     public String delete(long id) {
         return todoRequest.delete(id)
                 .then()
@@ -60,6 +64,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     // Возвращаем сразу List, а не массив, т.к. с ним удобнее потом работать: м. использовать .stream, .add и т.д.
     // "Get ToDos with offset {0}, limit {1}. Status code 200 and list of todos has been received."
     @Override
+    @Step("Read all by {offset, limit}")
     public List<Todo> readAll(int offset, int limit) {
         Todo[] todos = todoRequest.readAll()
                 .then()
@@ -69,6 +74,7 @@ public class ValidatedTodoRequest extends Request implements CrudInterface<Todo>
     }
 
     // "Get All ToDos. Status code 200 and list of todos has been received."
+    @Step("Read all")
     public List<Todo> readAll() {
         Todo[] todos = todoRequest.readAll()
                 .then()

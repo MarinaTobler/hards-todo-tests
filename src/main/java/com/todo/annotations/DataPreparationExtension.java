@@ -15,7 +15,7 @@ public class DataPreparationExtension implements BeforeEachCallback {
         var prepareTodo = testMethod.getAnnotation(PrepareTodo.class);
         if (prepareTodo != null) {
             for (int i = 0; i < prepareTodo.value(); i++) {
-                new TodoRequest(RequestSpec.authSpecForAdmin())
+                new TodoRequest(RequestSpec.authSpecAsAdmin())
                         .create(new TodoBuilder()
 //                                .setId(Long.valueOf(RandomStringUtils.randomNumeric(3)))
                                 .setId(Long.parseLong(RandomStringUtils.randomNumeric(3)))

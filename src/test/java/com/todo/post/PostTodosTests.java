@@ -4,7 +4,6 @@ import com.todo.BaseTest;
 import com.todo.models.Todo;
 import com.todo.models.TodoBuilder;
 import com.todo.requests.TodoRequest;
-import com.todo.requests.ValidatedTodoRequest;
 import com.todo.specs.request.RequestSpec;
 import com.todo.specs.response.IncorrectDataResponse;
 import io.restassured.http.ContentType;
@@ -22,10 +21,10 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class PostTodosTests extends BaseTest {
 
-    @BeforeEach
-    public void setupEach() {
-        deleteAllTodos();
-    }
+//    @BeforeEach
+//    public void setupEach() {
+//        deleteAllTodos();
+//    }
 
     @Test
     public void testCreateTodoWithValidData() {
@@ -80,7 +79,7 @@ public class PostTodosTests extends BaseTest {
                 .setText("text")
                 .build();
 
-        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecForAdmin());
+        TodoRequest authReq = new TodoRequest(RequestSpec.authSpecAsAdmin());
         authReq.create(newTodo)
                 .then()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -172,10 +171,10 @@ public class PostTodosTests extends BaseTest {
 
         // Сначала создаем TODO с id = 5
         Todo firstTodo = new Todo(5, "First Task", false);
-        createTodo(firstTodo);
+//        createTodo(firstTodo);
 //        ValidatedTodoRequest authValReq = new ValidatedTodoRequest(RequestSpec.authSpecForAdmin());
 //        authValReq.create(firstTodo);
-//        todoRequester.getValidatedRequest().create(firstTodo);
+        todoRequester.getValidatedRequest().create(firstTodo);
 
         // Пытаемся создать другую TODO с тем же id
         Todo duplicateTodo = new Todo(5, "Duplicate Task", true);
@@ -207,7 +206,7 @@ public class PostTodosTests extends BaseTest {
                 .then()
                 // для обычных вариантов:
 //                .spec(new IncorrectDataResponse().sameId(firstTodo.getId()));
-                .spec(new IncorrectDataResponse().sameId());
+                .spec(new IncorrectDataResponse().sameId(firstTodo.getId()));
     }
 
     // sozddaj 100 todo
