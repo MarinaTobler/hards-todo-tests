@@ -58,25 +58,15 @@ public class GetTodosTests extends BaseTest {
 //                .body("", hasSize(0));
 //    }
 
-    // пример спец теста
-//    @Test
-//    public void userCanCreateTodoWithArabicText() {
-//        // генерируем todo
-//        // проставляем text=arabic
-//        // если нам надо сделать тест на проверку арабских символов в тексте
-//        Todo todo1 = generateTestData(Todo.class);
-//        todo1.setText("arabic symbols");
-//        // создаем
-//        // проверяем успех
-//    }
-
     @Test
 //    @Mobile
 //    @Description("Получение списка TODO с существующими записями")
     @Description("Авторизированный юзер может получить список всех todo")
     @PrepareTodo(5)
+    @Tag("Positive")
     public void testGetTodosWithExistingEntries() {
         // Предварительно создать несколько TODO
+
         // - делаем это с помощью аннотации @PrepareTodo(5)
 ////        Todo todo1 = new Todo(1, "Task 1", false);
 //        // Random values:

@@ -39,4 +39,12 @@ public class IncorrectDataResponse {
         responseSpecBuilder.expectBody("message", Matchers.containsString("Offset or limit has incorrect values"));
         return responseSpecBuilder.build();
     }
+
+    public static ResponseSpecification textLengthIsOverThanMax() {
+        ResponseSpecBuilder responseSpecBuilder = new ResponseSpecBuilder();
+        responseSpecBuilder.expectStatusCode(HttpStatus.SC_BAD_REQUEST);
+        responseSpecBuilder.expectBody("message", Matchers.containsString("text length is over than max"));
+        return responseSpecBuilder.build();
+    }
+
 }
